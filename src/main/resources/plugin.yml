@@ -1,0 +1,41 @@
+# Base Information
+name: MastodonStatusPost
+version: @version@
+main: xyz.yuzulia.mcpl.mastodonstatuspost.CORE
+prefix: mstdnStatPost
+load: STARTUP
+authors: [YuzuRyo61, Yuzulia]
+description: Post to mastodon instance
+website: https://yuzulia.com/
+
+# Commands List
+commands:
+  mstdnpost:
+    description: Mastodon Status Post Plugin's command
+    aliases: [mastodonpost, mstpost]
+    permission: yuzulia.mstdnstatpost
+    permission-message: You do not have <permission>.
+    usage: /mstdnpost <post|setup|setupurl|forcesetup|auth|reload>
+
+# Permissions List
+permissions:
+  yuzulia.mstdnstatpost.*:
+    description: Mastodon Status Post Plugin's all permission
+    default: op
+    children:
+      yuzulia.mstdnstatpost.post: true
+      yuzulia.mstdnstatpost.setup: false
+      yuzulia.mstdnstatpost.auth: false
+      yuzulia.mstdnstatpost.reload: true
+  yuzulia.mstdnstatpost.post:
+    description: Post to registered mastodon instance
+    default: op
+  yuzulia.mstdnstatpost.setup:
+    description: Mastodon Stat Post Plugin SETUP PERMISSION
+    default: false
+  yuzulia.mstdnstatpost.auth:
+    description: Mastodon Stat Post Plugin SETUP PERMISSION FOR USER AUTHENCATION
+    default: false
+  yuzulia.mstdnstatpost.reload:
+    description: Reload Mastodon Status Post Plugin
+    default: op

@@ -1,0 +1,16 @@
+# Application Settings
+application:
+  address: notset
+  clientKey: notset
+  clientSecret: notset
+  accesstoken: notset
+
+# Post Settings
+poststart: true
+poststop: true
+postrestart: true
+prefix: "[MstdnStatus]"
+includetime: true
+
+# Language Settings
+language: jp
