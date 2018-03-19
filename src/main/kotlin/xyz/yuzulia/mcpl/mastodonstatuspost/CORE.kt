@@ -1,28 +1,38 @@
 package xyz.yuzulia.mcpl.mastodonstatuspost
 
-import org.bukkit.command.defaults.ReloadCommand
+import com.google.gson.Gson
+import com.sys1yagi.mastodon4j.MastodonClient
+import com.sys1yagi.mastodon4j.api.exception.Mastodon4jRequestException
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CORE : JavaPlugin() {
 
-    val log = getLogger()
-    val cfg = this.getConfig()
+    private val log = getLogger()
+    private val cfg = this.getConfig()
+    private val df = SimpleDateFormat(cfg.getString("post.dateformat"))
 
     private var langf: File? = null
     private var startf: File? = null
     private var stopf: File? = null
     private var restartf: File? = null
 
-    private val langcfg: FileConfiguration? = this.getLangConfig()
+    private var start : String = ""
+    private var stop : String = ""
+    private var restart : String = ""
+
     private var lang: FileConfiguration? = null
 
     fun getLangConfig() : FileConfiguration? {
         return lang
     }
-
 
     fun createFiles() {
         this.langf = File(dataFolder, "lang/" + cfg.getString("language") + ".yml")
@@ -37,7 +47,7 @@ class CORE : JavaPlugin() {
         }
 
         if (!startf!!.exists()){
-            langf!!.parentFile.mkdirs()
+            startf!!.parentFile.mkdirs()
             saveResource("template/start.txt", false)
             print("Created template/start.txt")
         }
@@ -58,20 +68,60 @@ class CORE : JavaPlugin() {
 
         try {
             lang!!.load(langf)
-        } catch (e: IOException) {
+
+            val startlines = startf!!.readLines()
+            start = ""
+            startlines.forEach{ start += it + "\n" }
+
+            val stoplines = stopf!!.readLines()
+            stop = ""
+            stoplines.forEach{ stop += it + "\n" }
+
+            val restartlines = restartf!!.readLines()
+            restart = ""
+            restartlines.forEach{ restart += it + "\n" }
+
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun plinit() {
-        if (cfg.getString("application.address") == "notset" || cfg.getString("application.clientKey") == "notset" || cfg.getString("application.clientSecret") == "notsey" || cfg.getString("application.accesstoken") == "notset") {
-            log.info(lang!!.getString("info.notsetup"))
-        }
-    }
+    fun plinit() =
+            if (cfg.getString("application.address") == "notset" || cfg.getString("application.clientKey") == "notset" || cfg.getString("application.clientSecret") == "notset" || cfg.getString("application.accesstoken") == "notset") {
+                log.info(lang!!.getString("info.notsetup"))
+            } else {
+                if(cfg.getString("post.start")!!.toBoolean()) {
+                    try {
+                        val client: MastodonClient = MastodonClient.Builder(cfg.getString("application.address"), OkHttpClient.Builder(), Gson())
+                                .accessToken(cfg.getString("application.accesstoken"))
+                                .build()
+
+                        val date = Date()
+
+                        val statusstart: String = cfg.getString("post.prefix") + "\n" + start + if(cfg.getString("post.includetime")!!.toBoolean()){ "\n" + df.format(date)}else{}
+
+                        val bodystart: RequestBody = FormBody.Builder()
+                                .add("status", statusstart)
+                                .add("visibility", cfg.getString("post.visibility"))
+                                .build()
+
+                        client.post("statuses", bodystart)
+                        log.info(lang!!.getString("info.postsuccess"))
+                    } catch (e: Mastodon4jRequestException) {
+                        e.printStackTrace()
+                        log.info(lang!!.getString("error.keyerror"))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {}
+            }
+
 
     override fun onEnable() {
         try {
-            this.saveDefaultConfig()
+            if (!File(dataFolder, "config.yml").exists()){
+                this.saveDefaultConfig()
+            }
             createFiles()
 
             getCommand("mstdnpost").executor = MstCMD(this)
@@ -86,8 +136,29 @@ class CORE : JavaPlugin() {
     }
 
     override fun onDisable() {
-        cfg.options().copyDefaults(true)
         saveConfig()
+        if(cfg.getString("post.stop")!!.toBoolean()) {
+            try {
+                val date = Date()
+                val statusstop: String = cfg.getString("post.prefix") + "\n" + stop + if(cfg.getString("post.includetime")!!.toBoolean()){ "\n" + df.format(date)}else{}
+
+                val bodystop: RequestBody = FormBody.Builder()
+                        .add("status", statusstop)
+                        .add("visibility", cfg.getString("post.visibility"))
+                        .build()
+
+                val client: MastodonClient = MastodonClient.Builder(cfg.getString("application.address"), OkHttpClient.Builder(), Gson())
+                        .accessToken(cfg.getString("application.accesstoken"))
+                        .build()
+
+                client.post("statuses", bodystop)
+                log.info(lang!!.getString("info.postsuccess"))
+            } catch (e: Mastodon4jRequestException) {
+                e.printStackTrace()
+                log.info(lang!!.getString("error.postfailed"))
+            }
+        } else {}
+        log.info("Plugin will disabling...")
         log.info("Powered by YuzuRyo61.")
         log.info("Site: https://yuzulia.com/")
     }

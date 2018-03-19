@@ -60,10 +60,8 @@ open class MstCMD(val plg : CORE, val log : Logger = plg.getLogger()) : CommandE
                         "reload" -> {
                             if (sender.hasPermission("yuzulia.mstdnstatpost.reload")) {
                                 sender.sendMessage(lang.getString("info.reloading"))
-                                plg.cfg.options().copyDefaults(true)
                                 plg.saveConfig()
                                 plg.reloadConfig()
-                                plg.saveDefaultConfig()
                                 plg.createFiles()
                                 lang = plg.getLangConfig()!!
                                 plg.plinit()

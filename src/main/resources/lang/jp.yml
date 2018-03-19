@@ -6,7 +6,7 @@ info:
   reloaded: '設定ファイルの再読込が完了しました。'
 error:
   permission: '権限がありません。'
-  postfailed: '投稿に失敗しました。文字数オーバーの可能性があります。'
+  postfailed: '投稿に失敗しました。詳細はログを確認してください。'
   setupconnect: '入力したアドレスに接続できません。'
   setupalready: 'すでにセットアップは完了しているようです。 もう一度セットアップしたい場合は /mstdn forcesetup [インスタンスアドレス]を入力してください。'
   setupincorrect: '入力形式が異なります。 /mstdnpost setup [インスタンスアドレス]'

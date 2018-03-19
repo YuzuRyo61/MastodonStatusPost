@@ -32,10 +32,10 @@ permissions:
     default: op
   yuzulia.mstdnstatpost.setup:
     description: Mastodon Stat Post Plugin SETUP PERMISSION
-    default: false
+    default: op
   yuzulia.mstdnstatpost.auth:
     description: Mastodon Stat Post Plugin SETUP PERMISSION FOR USER AUTHENCATION
-    default: false
+    default: op
   yuzulia.mstdnstatpost.reload:
     description: Reload Mastodon Status Post Plugin
     default: op
