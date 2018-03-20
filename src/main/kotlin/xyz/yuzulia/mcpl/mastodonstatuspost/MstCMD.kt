@@ -12,10 +12,13 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
+import java.text.SimpleDateFormat
+import java.util.*
 
 open class MstCMD(val plg : CORE, val log : Logger = plg.getLogger()) : CommandExecutor {
     var lang: FileConfiguration = plg.getLangConfig()!!
     var cfg: FileConfiguration = plg.getConfig()
+    private val df = SimpleDateFormat(cfg.getString("post.dateformat"))
     override fun onCommand(sender: CommandSender, cmd: Command, str: String, params: Array<out String>): Boolean {
         return when (cmd.getName().toLowerCase()) {
             "mstdnpost" -> {
@@ -26,18 +29,21 @@ open class MstCMD(val plg : CORE, val log : Logger = plg.getLogger()) : CommandE
                                 if (!params[1].isEmpty()) {
                                     try {
 
-                                        var cmdsender : String?
+                                        val cmdsender : String?
                                         if (sender is Player){
                                             cmdsender = sender.name
                                         } else {
                                             cmdsender = "CONSOLE"
                                         }
+
+                                        val date = Date()
+
                                         val client: MastodonClient = MastodonClient.Builder(cfg.getString("application.address"), OkHttpClient.Builder(), Gson())
                                                 .accessToken(cfg.getString("application.accesstoken"))
                                                 .build()
 
                                         val post: RequestBody = FormBody.Builder()
-                                                .add("status", cfg.getString("post.prefix") + "\n" + params[1])
+                                                .add("status", cfg.getString("post.prefix") + "\n" + params[1] + "\n" + if(cfg.getString("post.includetime")!!.toBoolean()){ "\n" + df.format(date)}else{})
                                                 .add("visibility", cfg.getString("post.visibility"))
                                                 .add("spoiler_text", plg.cpspoiler.replace("%sender%", cmdsender!!))
                                                 .build()
