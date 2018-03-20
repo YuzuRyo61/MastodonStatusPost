@@ -13,3 +13,5 @@ error:
   authfailed: '認証できません。トークンキーを正しく貼り付けましたか？'
   authincorrect: '入力形式が異なります。 /mstdnpost auth [アクセストークン]'
   keyerror: '設定ファイル上のキーで認証を試みましたが、エラーが発生しました。正しいキーを入力していますか？'
+usage:
+  post: "/mstdnpost post <投稿文>"

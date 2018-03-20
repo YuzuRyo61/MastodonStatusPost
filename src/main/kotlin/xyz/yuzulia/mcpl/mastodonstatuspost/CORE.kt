@@ -23,10 +23,12 @@ class CORE : JavaPlugin() {
     private var startf: File? = null
     private var stopf: File? = null
     private var restartf: File? = null
+    private var cpsoilerf: File? = null
 
-    private var start : String = ""
-    private var stop : String = ""
-    private var restart : String = ""
+    var start : String = ""
+    var stop : String = ""
+    var restart : String = ""
+    var cpspoiler : String = ""
 
     private var lang: FileConfiguration? = null
 
@@ -39,6 +41,7 @@ class CORE : JavaPlugin() {
         this.startf = File(dataFolder, "template/start.txt")
         this.stopf = File(dataFolder, "template/stop.txt")
         this.restartf = File(dataFolder, "template/restart.txt")
+        this.cpsoilerf = File(dataFolder, "template/cpspoiler.txt")
 
         if (!langf!!.exists()){
             langf!!.parentFile.mkdirs()
@@ -64,6 +67,12 @@ class CORE : JavaPlugin() {
             print("Created template/restart.txt")
         }
 
+        if (!cpsoilerf!!.exists()){
+            cpsoilerf!!.parentFile.mkdirs()
+            saveResource("template/cpspoiler.txt", false)
+            print("Created template/cpspoiler.txt")
+        }
+
         lang = YamlConfiguration()
 
         try {
@@ -81,7 +90,12 @@ class CORE : JavaPlugin() {
             restart = ""
             restartlines.forEach{ restart += it + "\n" }
 
+            val cpspoilerlines = cpsoilerf!!.readLines()
+            cpspoiler = ""
+            cpspoilerlines.forEach{ cpspoiler += it + "\n" }
+
         } catch (e: Exception) {
+            log.info("EXCEPT: ")
             e.printStackTrace()
         }
     }
@@ -130,7 +144,7 @@ class CORE : JavaPlugin() {
 
             log.info("Enabled!")
         } catch (e: Exception){
-           log.info("EXCEPT: ")
+            log.info("EXCEPT: ")
             e.printStackTrace()
         }
     }
