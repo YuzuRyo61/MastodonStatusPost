@@ -100,35 +100,36 @@ class CORE : JavaPlugin() {
         }
     }
 
-    fun plinit() =
-            if (cfg.getString("application.address") == "notset" || cfg.getString("application.clientKey") == "notset" || cfg.getString("application.clientSecret") == "notset" || cfg.getString("application.accesstoken") == "notset") {
-                log.info(lang!!.getString("info.notsetup"))
-            } else {
-                if(cfg.getString("post.start")!!.toBoolean()) {
-                    try {
-                        val client: MastodonClient = MastodonClient.Builder(cfg.getString("application.address"), OkHttpClient.Builder(), Gson())
-                                .accessToken(cfg.getString("application.accesstoken"))
-                                .build()
+    fun plinit() {
+        if (cfg.getString("application.address") == "notset" || cfg.getString("application.accesstoken") == "notset") {
+            log.info(lang!!.getString("info.notsetup"))
+        } else {
+            if(cfg.getString("post.start")!!.toBoolean()) {
+                try {
+                    val client: MastodonClient = MastodonClient.Builder(cfg.getString("application.address"), OkHttpClient.Builder(), Gson())
+                            .accessToken(cfg.getString("application.accesstoken"))
+                            .build()
 
-                        val date = Date()
+                    val date = Date()
 
-                        val statusstart: String = cfg.getString("post.prefix") + "\n" + start + if(cfg.getString("post.includetime")!!.toBoolean()){ "\n" + df.format(date)}else{}
+                    val statusstart: String = cfg.getString("post.prefix") + "\n" + start + if(cfg.getString("post.includetime")!!.toBoolean()){ "\n" + df.format(date)}else{}
 
-                        val bodystart: RequestBody = FormBody.Builder()
-                                .add("status", statusstart)
-                                .add("visibility", cfg.getString("post.visibility"))
-                                .build()
+                    val bodystart: RequestBody = FormBody.Builder()
+                            .add("status", statusstart)
+                            .add("visibility", cfg.getString("post.visibility"))
+                            .build()
 
-                        client.post("statuses", bodystart)
-                        log.info(lang!!.getString("info.postsuccess"))
-                    } catch (e: Mastodon4jRequestException) {
-                        e.printStackTrace()
-                        log.info(lang!!.getString("error.keyerror"))
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {}
-            }
+                    client.post("statuses", bodystart)
+                    log.info(lang!!.getString("info.postsuccess"))
+                } catch (e: Mastodon4jRequestException) {
+                    e.printStackTrace()
+                    log.info(lang!!.getString("error.keyerror"))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {}
+        }
+    }
 
 
     override fun onEnable() {

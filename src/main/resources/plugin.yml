@@ -25,7 +25,7 @@ permissions:
     children:
       yuzulia.mstdnstatpost.post: true
       yuzulia.mstdnstatpost.setup: false
-      yuzulia.mstdnstatpost.auth: false
+      yuzulia.mstdnstatpost.credentials: true
       yuzulia.mstdnstatpost.reload: true
   yuzulia.mstdnstatpost.post:
     description: Post to registered mastodon instance
@@ -33,8 +33,8 @@ permissions:
   yuzulia.mstdnstatpost.setup:
     description: Mastodon Stat Post Plugin SETUP PERMISSION
     default: op
-  yuzulia.mstdnstatpost.auth:
-    description: Mastodon Stat Post Plugin SETUP PERMISSION FOR USER AUTHENCATION
+  yuzulia.mstdnstatpost.credentials:
+    description: Mastodon Stat Post Plugin Show credentials
     default: op
   yuzulia.mstdnstatpost.reload:
     description: Reload Mastodon Status Post Plugin

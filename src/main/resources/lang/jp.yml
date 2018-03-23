@@ -1,17 +1,18 @@
 info:
   postsuccess: '投稿しました。'
-  setup: '以下のURLを入力して、認証を行ってください。認証を行ったら /mstdnpost auth [認証キー] を入力してください。'
-  notsetup: '認証が完了していません。/mstdnpost setupを実行してください。'
+  setup: '以下のURLを入力して、認証を行ってください。認証を行ったら /mstdnpost auth <認証キー> を入力してください。'
+  notsetup: '認証が完了していません。/mstdnpost setup <インスタンスアドレス>を実行してください。'
   reloading: '設定ファイルの再読込中です。'
   reloaded: '設定ファイルの再読込が完了しました。'
 error:
   permission: '権限がありません。'
   postfailed: '投稿に失敗しました。詳細はログを確認してください。'
-  setupconnect: '入力したアドレスに接続できません。'
-  setupalready: 'すでにセットアップは完了しているようです。 もう一度セットアップしたい場合は /mstdn forcesetup [インスタンスアドレス]を入力してください。'
-  setupincorrect: '入力形式が異なります。 /mstdnpost setup [インスタンスアドレス]'
+  unableconnect: '入力したアドレスに接続できません。'
+  setupalready: 'すでにセットアップは完了しているようです。 もう一度セットアップしたい場合は /mstdn setup [インスタンスアドレス] forceを入力してください。'
+  setupincorrect: '入力形式が異なります。 /mstdnpost setup <インスタンスアドレス> [force]'
   authfailed: '認証できません。トークンキーを正しく貼り付けましたか？'
-  authincorrect: '入力形式が異なります。 /mstdnpost auth [アクセストークン]'
   keyerror: '設定ファイル上のキーで認証を試みましたが、エラーが発生しました。正しいキーを入力していますか？'
 usage:
   post: "/mstdnpost post <投稿文>"
+  setup: "/mstdnpost setup <インスタンスアドレス> [force]"
+  auth: "/mstdnpost auth <トークンキー>"

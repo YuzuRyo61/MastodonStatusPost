@@ -66,7 +66,16 @@ open class MstCMD(val plg : CORE, val log : Logger = plg.getLogger()) : CommandE
                         }
                         "setup" -> {
                             if (sender.hasPermission("yuzulia.mstdnstatpost.setup")) {
-                                sender.sendMessage("Setup")
+                                if(!params[1].isEmpty()) {
+                                    try {
+                                        mstsetup(params[1], sender, cfg, lang)
+                                    } catch(e: Exception) {
+                                        e.printStackTrace()
+                                        sender.sendMessage(lang.getString("error.unableconnect"))
+                                    }
+                                } else {
+                                    sender.sendMessage(lang.getString("error.setupincorrect"))
+                                }
                                 true
                             } else {
                                 sender.sendMessage(lang.getString("error.permission"))
@@ -82,23 +91,26 @@ open class MstCMD(val plg : CORE, val log : Logger = plg.getLogger()) : CommandE
                                 true
                             }
                         }
-                        "forcesetup" -> {
-                            if (sender.hasPermission("yuzulia.mstdnstatpost.setup")) {
-                                sender.sendMessage("forcesetup")
-                                true
-                            } else {
-                                sender.sendMessage(lang.getString("error.permission"))
-                                true
-                            }
-                        }
                         "auth" -> {
-                            if (sender.hasPermission("yuzulia.mstdnpost.setup")) {
+                            if (sender.hasPermission("yuzulia.mstdnstatpost.setup")) {
                                 sender.sendMessage("auth")
                                 true
                             } else {
                                 sender.sendMessage(lang.getString("error.permission"))
                                 true
                             }
+                        }
+                        "cred" -> {
+                            if (sender.hasPermission("yuzulia.mstdnstatpost.credentials")) {
+                                if (cfg.getString("application.address") == "notset" || cfg.getString("application.accesskey") == "notset") {
+
+                                } else {
+                                    sender.sendMessage(lang.getString("info.notsetup"))
+                                }
+                            } else {
+                                sender.sendMessage(lang.getString("error.permission"))
+                            }
+                            true
                         }
                         "reload" -> {
                             if (sender.hasPermission("yuzulia.mstdnstatpost.reload")) {
